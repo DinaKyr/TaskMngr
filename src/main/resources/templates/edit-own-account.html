@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}" />
+    <title>Edit User</title>
+
+    <style>
+        .button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    
+    <hr />
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Edit User</h3>
+                        <form th:action="@{/user/edit}" th:object="${dtoUser}" method="post">
+                            <input type="hidden" name="_method" value="put"/>
+
+                            <div th:if="${forcePasswordChange}" style="color: red;">
+                                ⚠️ You must change your password before continuing.
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Username:</label>
+                                <input type="text" th:field="*{username}"  />
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Email:</label>
+                                <input type="email" th:field="*{email}"  />
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Password:</label>
+                                <input type="password" th:field="*{password}" placeholder="Enter new password"  />
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Confirm Password:</label>
+                                <input type="password" th:field="*{confirmPassword}" placeholder="Confirm new password"  /><br>
+                                <small>Leave blank to keep the current password.</small>
+                            </div>
+                            <div th:if="${errorMessage}" class="alert alert-danger">
+                                <p th:text="${errorMessage}"></p>
+                            </div>
+
+                            <div th:if="${forcePasswordChange}" style="color: red;">
+                                ⚠️ You must change your password before continuing.
+                            </div>
+                            
+                            <button class="btn btn-sm btn-outline-primary" type="submit">Confirm Changes</button>
+                        </form>
+
+                        <form th:action="@{'/user/delete'}" sec:authorize="!hasRole('ADMIN')" method="post" onsubmit="return confirm('Are you sure you want to delete your account?');">
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Delete Your Account</button>
+                        </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Project</title>
+    <link th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Assign Project to User</h2>
+    <form th:action="@{'/admin/users/' + ${userId} + '/assign-project'}" th:object="${dtoProject}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Project Name</label>
+            <input type="text" class="form-control" th:field="*{name}" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" th:field="*{description}" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="deadline" class="form-label">Deadline</label>
+            <input type="date" class="form-control" th:field="*{deadline}" />
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" th:field="*{isComplete}" />
+            <label class="form-check-label">Is Complete?</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Assign Project</button>
+    </form>
+
+    <form th:action="@{'/admin/users/' + ${userId} + '/assign-existing-project'}" method="post">
+        <div class="mb-3">
+            <label for="existingProjectId" class="form-label">Select Existing Project</label>
+            <select class="form-select" id="existingProjectId" name="projectId" required>
+                <option th:each="project : ${existingProjects}"
+                        th:value="${project.id}"
+                        th:text="${project.name}">
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Assign Existing Project</button>
+    </form>
+
+</div>
+<script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
