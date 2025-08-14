@@ -25,15 +25,21 @@
             padding-bottom: 1em; 
         }
         .hover-project:hover .action-buttons {
-            display: block;
+            opacity: 1;     
         }
         .hover-project .action-buttons {
-            display: none;
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            
+            display: block;      /* always block */
+            height: 0.8em;       /* reserve height for buttons */
+            opacity: 0;          /* invisible initially */
+            margin-top: 0.5em;
+            text-align: right;
+            transition: opacity 0.3s ease;
         }
+
+        .hover-tasks {
+        position: relative;
+    }
+
 
         .hover-tasks .action-buttons {
             display: none;
@@ -65,7 +71,7 @@
 </head>
 <body>
 <div class="container" style="padding-bottom: 100px;">
-    <h1>The Best Task Manager</h1>
+    <h1>Task Manager</h1>
     <hr />
 
     <!-- <h4 class="mt-4">BASIC USERS</h4> -->
