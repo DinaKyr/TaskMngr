@@ -28,17 +28,17 @@
             opacity: 1;     
         }
         .hover-project .action-buttons {
-            display: block;      /* always block */
-            height: 0.8em;       /* reserve height for buttons */
-            opacity: 0;          /* invisible initially */
+            display: block;
+            height: 0.8em;       
+            opacity: 0;          
             margin-top: 0.5em;
             text-align: right;
             transition: opacity 0.3s ease;
         }
 
         .hover-tasks {
-        position: relative;
-    }
+            position: relative;
+        }
 
 
         .hover-tasks .action-buttons {
@@ -224,7 +224,7 @@
 
 
    <p sec:authorize="hasRole('ADMIN')">
-        <a class="btn btn-outline-success" href="/create-user">
+        <a class="btn btn-outline-success" th:href="@{/admin/create-user}">
             <i class="bi bi-plus-square-fill"></i> Create user
         </a>
     </p>

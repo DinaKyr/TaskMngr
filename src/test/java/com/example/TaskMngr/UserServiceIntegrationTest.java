@@ -1,7 +1,7 @@
 package com.example.TaskMngr;
 
 import com.example.TaskMngr.models.User;
-import com.example.TaskMngr.models.Role; // or whatever your role class
+import com.example.TaskMngr.models.Role;
 import com.example.TaskMngr.dto.DtoUser;
 import com.example.TaskMngr.repositories.RepositoryUser;
 import com.example.TaskMngr.services.UserService;
@@ -31,7 +31,7 @@ public class UserServiceIntegrationTest {
                 "integration@example.com",
                 "password123",
                 role,
-                null // or empty list of projects
+                null //empty list of projects
         );
 
         // When

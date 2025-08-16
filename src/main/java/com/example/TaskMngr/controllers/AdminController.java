@@ -22,7 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.TaskMngr.dto.DtoProject;
 import com.example.TaskMngr.dto.DtoTask;
 import com.example.TaskMngr.dto.DtoUser;
+import com.example.TaskMngr.dto.OnCreate;
+import com.example.TaskMngr.dto.OnUpdate;
+import com.example.TaskMngr.models.Role;
 import com.example.TaskMngr.models.User;
+import com.example.TaskMngr.repositories.RepositoryUser;
 import com.example.TaskMngr.services.UserService;
 import com.example.TaskMngr.services.ProjectService;
 import com.example.TaskMngr.services.TaskService;
@@ -31,6 +35,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 
 @Controller
 @RequestMapping("/admin")
@@ -40,11 +45,39 @@ public class AdminController {
     private final UserService userService;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final RepositoryUser repositoryUser;
 
-    public AdminController(UserService userService , ProjectService projectService, TaskService taskService) {
+    public AdminController(UserService userService , ProjectService projectService, TaskService taskService, RepositoryUser repositoryUser) {
         this.userService = userService;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.repositoryUser = repositoryUser;
+    }
+
+    @GetMapping("/create-user")
+    public String showCreateUserForm(Model model) {
+    model.addAttribute("dtouser", new DtoUser());
+    model.addAttribute("roles", Role.values());
+
+    return "new-user";
+}
+
+    @PostMapping("/user")
+    public String createUser(@Validated(OnCreate.class) @ModelAttribute("dtouser") DtoUser dtoUser, BindingResult result, Model model){
+        if (result.hasErrors()) {
+            model.addAttribute("dtouser", dtoUser);
+            model.addAttribute("roles", Role.values()); //important!!
+
+            return "new-user"; // Return to the form with validation errors
+        }
+
+        if (repositoryUser.existsByUsername(dtoUser.getUsername())) {
+            result.rejectValue("username", "error.dtouser", "Username already exists");
+            model.addAttribute("roles", Role.values());
+            return "new-user";
+        }
+        userService.createUser(dtoUser);
+        return "redirect:/";
     }
 
     @GetMapping("/users/{userId}/assign-project")
@@ -80,16 +113,16 @@ public class AdminController {
 
 
     @PutMapping("/users/{userId}/edit")
-    public String updateUser(@PathVariable Long userId, @ModelAttribute("dtoUser") @Valid DtoUser dtoUser, BindingResult bindingResult, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails) {
+    public String updateUser(@PathVariable Long userId, @Validated(OnUpdate.class) @ModelAttribute("dtoUser") @Valid DtoUser dtoUser, BindingResult bindingResult,Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
         if (bindingResult.hasErrors()) {
             // CHECKS IF THERE ARE VALIDATION ERRORS
             // If there are errors, redirect back to the edit form with error messages
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dtoUser", bindingResult);
-            redirectAttributes.addFlashAttribute("dtoUser", dtoUser);
+            model.addAttribute("dtoUser", dtoUser);
+            System.out.println("Validation errors: " + bindingResult);
             System.out.println("Validation errors: " + bindingResult);
 
-        return "redirect:/admin/users/" + userId + "/edit";
+        return "edit-user";
     }
 
 
@@ -97,7 +130,9 @@ public class AdminController {
             User currentUser = userService.findByUsername(userDetails.getUsername()); // get full user object
             userService.updateUser(userId, dtoUser, currentUser);
         } catch (IllegalArgumentException e) {
-            return "redirect:/admin/users/" + userId + "/edit?error=" + e.getMessage();
+            model.addAttribute("dtoUser", dtoUser);
+            model.addAttribute("updateError", e.getMessage());
+            return "edit-user"; // show error message on the same page
         }
 
         return "redirect:/";
@@ -211,7 +246,7 @@ public class AdminController {
 
         if (bindingResult.hasErrors()) {
             // CHECKS IF THERE ARE VALIDATION ERRORS
-            // If there are errors, redirect back to the edit form with error messages
+            // If there are errorsredirect back to the edit form with error messages
             
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dtoTask", bindingResult);
             redirectAttributes.addFlashAttribute("taskId", taskId);

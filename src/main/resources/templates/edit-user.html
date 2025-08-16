@@ -31,11 +31,15 @@
                             <div class="mb-3">
                                 <label>Username:</label>
                                 <input type="text" th:field="*{username}"  />
+                                <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+
                             </div>
 
                             <div class="mb-3">
                                 <label>Email:</label>
                                 <input type="email" th:field="*{email}"  />
+                                <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
                             </div>
 
                             <!-- <div class="mb-3">

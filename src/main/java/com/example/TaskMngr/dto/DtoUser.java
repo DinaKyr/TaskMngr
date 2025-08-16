@@ -22,16 +22,16 @@ public class DtoUser {
 
     private Long id;
 
-    @NotBlank(message = "Name is required", groups = OnCreate.class)
-    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters", groups = OnCreate.class)
+    @NotBlank(message = "Name is required", groups = {OnCreate.class, OnUpdate.class})
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters", groups = {OnCreate.class, OnUpdate.class})
     private String username;
 
-    @Email(message = "Email should be valid", groups = OnCreate.class)
-    @NotBlank(message = "Email is required", groups = OnCreate.class)
+    @Email(message = "Email should be valid", groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank(message = "Email is required", groups = {OnCreate.class, OnUpdate.class})
     private String email;
 
 
-    @NotBlank(message = "Password is required", groups = OnCreate.class)
+    @NotBlank(message = "Password is required" ,groups =  OnCreate.class)
     @Size(min = 8, message = "Password must be at least 8 characters", groups = OnCreate.class)
     private String password;
 

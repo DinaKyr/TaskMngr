@@ -9,14 +9,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.TaskMngr.dto.DtoUser;
-import com.example.TaskMngr.dto.OnCreate;
-import com.example.TaskMngr.models.Role;
-import com.example.TaskMngr.repositories.RepositoryUser;
+import com.example.TaskMngr.dto.OnUpdate;
+//import com.example.TaskMngr.dto.OnCreate;
+//import com.example.TaskMngr.models.Role;
+//import com.example.TaskMngr.repositories.RepositoryUser;
 import com.example.TaskMngr.services.UserService;
 import org.springframework.ui.Model;
 //import jakarta.validation.Valid;
@@ -26,34 +27,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private RepositoryUser repositoryUser;
+    //@Autowired
+   // private RepositoryUser repositoryUser;
 
-    @GetMapping("/create-user")
-    public String showCreateUserForm(Model model) {
-    model.addAttribute("dtouser", new DtoUser());
-    model.addAttribute("roles", Role.values());
-
-    return "new-user";
-}
-
-    @PostMapping("/user")
-    public String createUser(@Validated(OnCreate.class) @ModelAttribute("dtouser") DtoUser dtoUser, BindingResult result, Model model){
-        if (result.hasErrors()) {
-            model.addAttribute("dtouser", dtoUser);
-            model.addAttribute("roles", Role.values()); //important!!
-
-            return "new-user"; // Return to the form with validation errors
-        }
-
-        if (repositoryUser.existsByUsername(dtoUser.getUsername())) {
-            result.rejectValue("username", "error.dtouser", "Username already exists");
-            model.addAttribute("roles", Role.values());
-            return "new-user";
-        }
-        userService.createUser(dtoUser);
-        return "redirect:/";
-    }
+    
 
     @GetMapping("/edit")
     public String editMyAccount(Model model, Principal principal) {
@@ -65,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping("/user/edit")
-    public String updateMyAccount(@ModelAttribute("dtoUser") @Validated DtoUser dtoUser,
+    public String updateMyAccount(@ModelAttribute("dtoUser") @Validated(OnUpdate.class) DtoUser dtoUser,
                                 BindingResult bindingResult,
                                 Principal principal,
                                 Model model) {
