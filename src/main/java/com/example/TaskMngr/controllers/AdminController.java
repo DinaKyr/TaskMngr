@@ -66,14 +66,14 @@ public class AdminController {
     public String createUser(@Validated(OnCreate.class) @ModelAttribute("dtouser") DtoUser dtoUser, BindingResult result, Model model){
         if (result.hasErrors()) {
             model.addAttribute("dtouser", dtoUser);
-            model.addAttribute("roles", Role.values()); //important!!
+            model.addAttribute("roles" , Role.values()); //important!!
 
             return "new-user"; // Return to the form with validation errors
         }
 
         if (repositoryUser.existsByUsername(dtoUser.getUsername())) {
-            result.rejectValue("username", "error.dtouser", "Username already exists");
-            model.addAttribute("roles", Role.values());
+            result.rejectValue("username","error.dtouser", "Username already exists");
+            model.addAttribute("roles",Role.values());
             return "new-user";
         }
         userService.createUser(dtoUser);
@@ -83,11 +83,11 @@ public class AdminController {
     @GetMapping("/users/{userId}/assign-project")
     @PreAuthorize("hasRole('ADMIN')")
     public String showProjectAssignmentForm(@PathVariable Long userId, Model model) {
-        List<DtoProject> existingProjects = projectService.getAllProjects(); // You can filter here if needed
+        List<DtoProject> existingProjects = projectService.getAllProjects(); 
 
         model.addAttribute("userId", userId);
-        model.addAttribute("dtoProject", new DtoProject());
-        model.addAttribute("existingProjects", existingProjects);
+        model.addAttribute("dtoProject",new DtoProject());
+        model.addAttribute("existingProjects",existingProjects);
         return "assign-project";
     }
 
@@ -98,7 +98,7 @@ public class AdminController {
             @ModelAttribute DtoProject dtoProject,
             Principal principal) {
 
-        Long adminId = userService.findByUsername(principal.getName()).getId();
+        Long adminId =userService.findByUsername(principal.getName()).getId();
         userService.addProjectToUser(adminId, userId, dtoProject);
         return "redirect:/"; 
     }
@@ -117,7 +117,7 @@ public class AdminController {
 
         if (bindingResult.hasErrors()) {
             // CHECKS IF THERE ARE VALIDATION ERRORS
-            // If there are errors, redirect back to the edit form with error messages
+            // If there are errors redirect back to the edit form with error messages
             model.addAttribute("dtoUser", dtoUser);
             System.out.println("Validation errors: " + bindingResult);
             System.out.println("Validation errors: " + bindingResult);
@@ -127,7 +127,7 @@ public class AdminController {
 
 
         try {
-            User currentUser = userService.findByUsername(userDetails.getUsername()); // get full user object
+            User currentUser =userService.findByUsername(userDetails.getUsername()); // get full user object
             userService.updateUser(userId, dtoUser, currentUser);
         } catch (IllegalArgumentException e) {
             model.addAttribute("dtoUser", dtoUser);
@@ -139,14 +139,14 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{userId}/delete")
-    public String deleteUser(@PathVariable Long userId, RedirectAttributes redirectAttributes) {
+    public String deleteUser(@PathVariable Long userId,RedirectAttributes redirectAttributes) {
         try {
             userService.deleteUser(userId);
             redirectAttributes.addFlashAttribute("success", "User deleted successfully.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete user.");
+            redirectAttributes.addFlashAttribute("error","Failed to delete user.");
         }
-        return "redirect:/"; // Or your user list page
+        return "redirect:/"; 
     }
 
 //---------------------For Projects-------------------------------------------------------
@@ -168,16 +168,16 @@ public class AdminController {
             // If there are errors, redirect back to the edit form with error messages
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dtoProject", bindingResult);
             redirectAttributes.addFlashAttribute("dtoProject", dtoProject);
-            System.out.println("Validation errors: " + bindingResult);
+            System.out.println("Validation errors: "+bindingResult);
 
-        return "redirect:/admin/projects/" + projectId + "/edit";
+        return "redirect:/admin/projects/"+projectId+"/edit";
     }
 
 
         try {
             projectService.updateProject(projectId, dtoProject);
         } catch (IllegalArgumentException e) {
-            return "redirect:/admin/projects/" + projectId + "/edit?error=" + e.getMessage();
+            return "redirect:/admin/projects/" + projectId + "/edit?error="+e.getMessage();
         }
 
         return "redirect:/";
@@ -192,23 +192,23 @@ public class AdminController {
     @DeleteMapping("/projects/{projectId}/delete")
     public String deleteProjectCompletely(@PathVariable Long projectId, RedirectAttributes redirectAttributes) {
         projectService.deleteProject(projectId);
-        redirectAttributes.addFlashAttribute("message", "Project deleted for all users.");
+        redirectAttributes.addFlashAttribute("message","Project deleted for all users.");
         return "redirect:/";
     }
 
 
     @PostMapping("/users/{userId}/projects/{projectId}/remove")
     public String removeProjectFromUser(@PathVariable Long userId, @PathVariable Long projectId, Principal principal) {
-        Long adminId = userService.getUserIdFromPrincipal(principal); // Or however you track current user
+        Long adminId = userService.getUserIdFromPrincipal(principal); 
         userService.removeProjectFromUser(userId, adminId, projectId);
         return "redirect:/"; 
     }
 //---------------------For Tasks-------------------------------------------------------
     @GetMapping("/projects/{projectId}/add-task")
     public String showAddTaskForm(@PathVariable Long projectId, Model model) {
-        model.addAttribute("projectId", projectId);
-        model.addAttribute("dtoTask", new DtoTask());
-        return "add-task"; // name of the Thymeleaf view you’ll create
+        model.addAttribute("projectId",projectId);
+        model.addAttribute("dtoTask",new DtoTask());
+        return "add-task"; 
     }
 
     @PostMapping("/projects/{projectId}/add-task")
@@ -220,22 +220,22 @@ public class AdminController {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dtoTask", bindingResult);
-            redirectAttributes.addFlashAttribute("dtoTask", dtoTask);
-            return "redirect:/admin/projects/" + projectId + "/add-task";
+            redirectAttributes.addFlashAttribute("dtoTask",dtoTask);
+            return "redirect:/admin/projects/"+projectId +"/add-task";
         }
 
         try {
             projectService.addTaskToProject(projectId, dtoTask);
         } catch (IllegalArgumentException e) {
-            return "redirect:/admin/projects/" + projectId + "/add-task?error=" + e.getMessage();
+            return "redirect:/admin/projects/"+projectId+"/add-task?error="+e.getMessage();
         }
 
-        return "redirect:/"; // or redirect back to project detail
+        return "redirect:/"; // or back to project detail
     }
 
     @GetMapping("/tasks/{taskId}/edit")
     public String showEditTaskForm(@PathVariable Long taskId, Model model) {
-        DtoTask dtoTask = taskService.getTaskById(taskId);
+        DtoTask dtoTask=taskService.getTaskById(taskId);
         model.addAttribute("taskId", taskId);
         model.addAttribute("dtoTask", dtoTask);
         return "edit-task"; 
@@ -245,22 +245,22 @@ public class AdminController {
     public String updateTask(@PathVariable Long taskId, @ModelAttribute("dtoTask") @Valid DtoTask dtoTask, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            // CHECKS IF THERE ARE VALIDATION ERRORS
-            // If there are errorsredirect back to the edit form with error messages
+            //CHECKS IF THERE ARE VALIDATION ERRORS
+            //if there are errorsredirect back to the edit form with error messages
             
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.dtoTask", bindingResult);
             redirectAttributes.addFlashAttribute("taskId", taskId);
             redirectAttributes.addFlashAttribute("dtoTask", dtoTask);
             System.out.println("Validation errors: " + bindingResult);
 
-        return "redirect:/admin/tasks/" + taskId + "/edit";
+        return "redirect:/admin/tasks/"+taskId+"/edit";
     }
 
 
         try {
             taskService.updateTask(taskId, dtoTask);
         } catch (IllegalArgumentException e) {
-            return "redirect:/admin/tasks/" + taskId + "/edit?error=" + e.getMessage();
+            return "redirect:/admin/tasks/"+taskId+"/edit?error=" +e.getMessage();
         }
 
         return "redirect:/";
@@ -269,7 +269,7 @@ public class AdminController {
     @DeleteMapping("/tasks/{taskId}/delete")
     public String deleteTask(@PathVariable Long taskId, RedirectAttributes redirectAttributes) {
         taskService.deleteTaskById(taskId);
-        redirectAttributes.addFlashAttribute("message", "Task deleted successfully.");
+        redirectAttributes.addFlashAttribute("message","Task deleted successfully.");
         return "redirect:/";
     }
 

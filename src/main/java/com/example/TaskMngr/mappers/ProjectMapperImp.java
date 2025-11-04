@@ -16,7 +16,7 @@ public class ProjectMapperImp implements ProjectMapper{
 
     @Autowired
     public ProjectMapperImp(TaskMapper taskMapper) {
-        this.taskMapper = taskMapper;
+        this.taskMapper =taskMapper;
     }
 
     @Override

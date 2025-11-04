@@ -25,12 +25,12 @@ public class WebSecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .successHandler(customLoginSuccessHandler) // 👈 here
+                .successHandler(customLoginSuccessHandler)
                 //.defaultSuccessUrl("/", true)
                 .permitAll()
             )
             .logout(logout -> logout.permitAll())
-            .csrf(csrf -> csrf.disable()) // only for testing
+            .csrf(csrf -> csrf.disable()) //only testing
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions.sameOrigin())
             );
@@ -40,7 +40,7 @@ public class WebSecurityConfig {
     
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // singleton instance
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

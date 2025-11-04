@@ -29,7 +29,7 @@
                             <input type="hidden" name="_method" value="put"/>
 
                             <div th:if="${forcePasswordChange}" style="color: red;">
-                                ⚠️ You must change your password before continuing.
+                                You must change your password before continuing.
                             </div>
 
                             <div class="mb-3">
@@ -60,10 +60,6 @@
                                 <p th:text="${errorMessage}"></p>
                             </div>
 
-                            <div th:if="${forcePasswordChange}" style="color: red;">
-                                ⚠️ You must change your password before continuing.
-                            </div>
-                            
                             <button class="btn btn-sm btn-outline-primary" type="submit">Confirm Changes</button>
                         </form>
 

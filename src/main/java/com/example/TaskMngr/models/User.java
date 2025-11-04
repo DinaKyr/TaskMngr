@@ -56,7 +56,7 @@ public class User implements Serializable {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role != null ? role : Role.BASIC; // Default to BASIC if role is null
+        this.role = role != null ? role : Role.BASIC; //BASIC if role is null
     }
 
     public void addProject(Project project) {

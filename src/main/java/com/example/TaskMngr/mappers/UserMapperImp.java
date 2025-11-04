@@ -22,7 +22,7 @@ public class UserMapperImp implements UserMapper {
     @Override
     public DtoUser toDto(User user) {
         if (user == null) return null;
-        return new DtoUser(user.getId(),user.getUsername(), user.getEmail(), null, user.getRole(),projectMapper.toDtoList(user.getProjects())); // No password in DTO
+        return new DtoUser(user.getId(),user.getUsername(), user.getEmail(), null, user.getRole(),projectMapper.toDtoList(user.getProjects())); // nopassword in DTO
     }
 
     @Override

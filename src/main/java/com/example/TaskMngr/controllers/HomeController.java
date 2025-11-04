@@ -18,9 +18,9 @@ public class HomeController {
     private ProjectService projectService;
 
     public HomeController(UserService userService, TaskService taskService, ProjectService projectService) {
-        this.userService = userService;
-        this.taskService = taskService;
-        this.projectService = projectService;
+        this.userService =userService;
+        this.taskService =taskService;
+        this.projectService =projectService;
     }
     
     @GetMapping("/")

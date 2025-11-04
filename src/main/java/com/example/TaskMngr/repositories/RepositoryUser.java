@@ -13,12 +13,12 @@ import com.example.TaskMngr.models.User;
 @Repository
 public interface RepositoryUser extends JpaRepository<User,Long> {
 
-    // Custom query to find users by role
+    //to find users by role
     List<User> findByRole(String role);
 
     Optional<User> findByUsername(String username);
 
-    // Method to check if a user exists by role
+    //to check if a user exists by role
     boolean existsByRole(Role role);
 
     boolean existsByUsername(String username);

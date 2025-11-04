@@ -47,21 +47,21 @@ public class ProjectService {
 
     @Transactional
     public List<DtoProject> getAllProjects() {
-        List<Project> projects = repositoryProject.findAll();
+        List<Project> projects=repositoryProject.findAll();
         return projects.stream()
-                .map(projectMapper::toDto) // Use projectMapper to convert Project to DtoProject
+                .map(projectMapper::toDto) //projectMapper from Project to DtoProject
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public DtoProject getProjectById(Long id) { 
-        Project project = repositoryProject.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
-        return projectMapper.toDto(project); // Use projectMapper to convert Project to DtoProject
+        Project project =repositoryProject.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+        return projectMapper.toDto(project); // projectmapper same
     }
 
     @Transactional
     public List<DtoProject> getProjectById(List<Long> ids) {
-        List<Project> projects = repositoryProject.findAllById(ids);
+        List<Project> projects=repositoryProject.findAllById(ids);
         
         if (projects.size() != ids.size()) {
             throw new RuntimeException("One or more projects not found for the provided IDs");
@@ -85,7 +85,7 @@ public class ProjectService {
     public Project createProject(DtoProject dtoProject , List<Long> userIds){
 
         List<User> users =userService.getUsersByIds(userIds);
-        Project project = new Project(
+        Project project =new Project(
             dtoProject.getName(),
             dtoProject.getDescription(),  
             dtoProject.getIsComplete(),
@@ -110,43 +110,43 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(Long projectId){
-        Project project = repositoryProject.findById(projectId)
+        Project project =repositoryProject.findById(projectId)
             .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        // Step 1: Break the link between this project and all users
-        List<User> users = new ArrayList<>(project.getUsers()); // avoid ConcurrentModificationException
+        //1: Break the link between this project and all users
+        List<User> users = new ArrayList<>(project.getUsers());
         for (User user : users) {
             user.getProjects().remove(project);
         }
-        project.getUsers().clear(); // Optional: clean up both sides
+        project.getUsers().clear(); //clean up both sides
 
-        // Step 2: Delete tasks associated with the project (if cascade/orphanRemoval isn't doing it)
+        //2: Delete tasks associated with the project (if cascade/orphanRemoval isn't doing it)
         for (Task task : new ArrayList<>(project.getTasks())) {
             task.setProject(null);
             repositoryTask.delete(task);
         }
         project.getTasks().clear(); // Optional safety
 
-        // Step 3: Now safe to delete the project
+        //3: delete
         repositoryProject.delete(project);
     }
 
     @Transactional
     public void addTaskToProject(Long id, DtoTask dtoTask) {
-        Project project = repositoryProject.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
-        Task task = taskMapper.toEntity(dtoTask);
+        Project project =repositoryProject.findById(id).orElseThrow(() ->new RuntimeException("Project not found"));
+        Task task=taskMapper.toEntity(dtoTask);
         project.addTask(task);
         repositoryProject.save(project); 
     }
 
     @Transactional
     public void removeTaskFromProject(Long projectId, Long taskId) {
-        Project project = repositoryProject.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
-        Task task = repositoryTask.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
+        Project project =repositoryProject.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found"));
+        Task task=repositoryTask.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
 
         project.getTasks().remove(task);
         task.setProject(null);
 
-        repositoryProject.save(project); // or repositoryTask.save(task) depending on cascade settings
+        repositoryProject.save(project);
     }
 }

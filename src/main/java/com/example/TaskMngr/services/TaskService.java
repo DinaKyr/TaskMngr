@@ -21,12 +21,12 @@ public class TaskService {
 
     @Autowired
     public TaskService(TaskMapper taskMapper, RepositoryTask repositoryTask) {
-        this.taskMapper = taskMapper;
-        this.repositoryTask = repositoryTask;
+        this.taskMapper =taskMapper;
+        this.repositoryTask =repositoryTask;
     }
 
     public List<DtoTask> getAllTasks() {
-        List<Task> tasks = repositoryTask.findAll();
+        List<Task> tasks =repositoryTask.findAll();
         return taskMapper.toDtoList(tasks);
     }
 
@@ -37,11 +37,11 @@ public class TaskService {
 
     @Transactional
     public Task createTask(DtoTask dtoTask) {
-        Task task = taskMapper.toEntity(dtoTask);
+        Task task =taskMapper.toEntity(dtoTask);
         return repositoryTask.save(task);
     }
     public DtoTask getTaskById(Long id) {
-        Task task = repositoryTask.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        Task task =repositoryTask.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
         if (task != null) {
             return taskMapper.toDto(task);
         } else {

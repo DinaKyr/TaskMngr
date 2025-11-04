@@ -37,7 +37,7 @@ public class Task implements Serializable {
         LOW, MEDIUM, HIGH
     }
 
-    public Task() {}
+    public Task(){}
 
     public Task(String description, Boolean isComplete ,Priority priority,  LocalDate deadline ,String status) {
        

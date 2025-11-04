@@ -28,7 +28,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerForm(Model model) {
-        model.addAttribute("user", new DtoUser());
+        model.addAttribute("user",new DtoUser());
         return "register";
     }
 
@@ -42,7 +42,7 @@ public class AuthController {
         }
         
         try {
-            dtoUser.setRole(Role.BASIC); // Always BASIC on register
+            dtoUser.setRole(Role.BASIC); //lways BASIC on register
             userService.createUser(dtoUser);
         } catch (Exception e) {
             bindingResult.rejectValue("username", "error.user", e.getMessage());

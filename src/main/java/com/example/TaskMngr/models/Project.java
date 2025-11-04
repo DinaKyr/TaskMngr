@@ -25,7 +25,7 @@ import jakarta.persistence.OneToMany;
 @Getter 
 @Setter
 @Entity
-@Table(name = "projects")
+@Table(name ="projects")
 public class Project implements Serializable {
 
     @Id
@@ -36,13 +36,13 @@ public class Project implements Serializable {
     private Boolean isComplete;
     private LocalDate deadline;
 
-    @ManyToMany(mappedBy = "projects")
+    @ManyToMany(mappedBy="projects")
     private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="project", cascade = CascadeType.ALL)
     private List<Task> tasks=new ArrayList<>();
 
-    @Column(nullable = false)
+    @Column(nullable=false)
     private boolean archived = false;
 
     public Project(){}
@@ -63,7 +63,7 @@ public class Project implements Serializable {
 
     public void removeTask(Task task) {
         tasks.remove(task);
-        if (task.getProject() == this) {
+        if (task.getProject()==this) {
             task.setProject(null);
         }
     }

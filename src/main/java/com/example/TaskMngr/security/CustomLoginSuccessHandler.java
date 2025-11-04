@@ -29,11 +29,11 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
 
-        String contextPath = request.getContextPath(); // usually "" or "/yourApp"
+        String contextPath = request.getContextPath(); 
     if (user.isForcePasswordChange()) {
-        response.sendRedirect(contextPath + "/edit?forcePasswordChange=true");
+        response.sendRedirect(contextPath +"/edit?forcePasswordChange=true");
     } else {
         response.sendRedirect(contextPath + "/");
         }
     }
-}
+}//you dont know

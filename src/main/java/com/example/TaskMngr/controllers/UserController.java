@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 //import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.TaskMngr.dto.DtoUser;
@@ -33,11 +34,12 @@ public class UserController {
     
 
     @GetMapping("/edit")
-    public String editMyAccount(Model model, Principal principal) {
-        String currentUsername = principal.getName();
-        DtoUser dtoUser = userService.findDtoByUsername(currentUsername);
+    public String editMyAccount(Model model, Principal principal,@RequestParam(required = false) boolean forcePasswordChange) {
+        String currentUsername =principal.getName();
+        DtoUser dtoUser=userService.findDtoByUsername(currentUsername);
         model.addAttribute("dtoUser", dtoUser);
         model.addAttribute("canEditRole", false);
+        model.addAttribute("forcePasswordChange", forcePasswordChange);
         return "edit-own-account"; // new Thymeleaf page
     }
 
@@ -56,7 +58,7 @@ public class UserController {
         } catch (IllegalArgumentException ex) {
             model.addAttribute("dtoUser", dtoUser);
             model.addAttribute("canEditRole", false);
-            model.addAttribute("errorMessage", ex.getMessage()); // e.g. "Passwords do not match"
+            model.addAttribute("errorMessage", ex.getMessage());
             return "edit-own-account";
         }
     }
@@ -64,11 +66,11 @@ public class UserController {
     @DeleteMapping("/user/delete")
     public String deleteOwnAccount(Principal principal, RedirectAttributes redirectAttributes) {
         try {
-            String username = principal.getName();
-            Long userId = userService.findByUsername(username).getId();
+            String username =principal.getName();
+            Long userId =userService.findByUsername(username).getId();
             userService.deleteUser(userId);
             redirectAttributes.addFlashAttribute("success", "Account deleted.");
-            return "redirect:/logout"; // or homepage
+            return "redirect:/logout"; //or homepage
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to delete account.");
             return "redirect:/user/edit";

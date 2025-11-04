@@ -209,7 +209,7 @@
             <tr th:each="admin : ${users}" th:if="${admin.role.name() == 'ADMIN'}">
                 <td th:text="${admin.username}"></td>
                 
-                <!-- Conditionally render this TD only if current viewer is admin -->
+                <!-- only if current viewer is admin -->
                 <td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a th:if="${admin.username != #authentication.name}"
                     th:href="@{'/admin/users/' + ${admin.id} + '/edit'}"
@@ -236,7 +236,7 @@
 
 
 </div>
-<!-- New footer menu bar at bottom -->
+<!--footer menu at bottom-->
 <footer class="mt-auto py-3 bg-light border-top fixed-bottom">
     <div class="container d-flex justify-content-center gap-3">
         <form th:action="@{/logout}" method="post" style="display: inline;">
