@@ -2,7 +2,6 @@ package com.example.TaskMngr.services;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ public class TaskService {
     private RepositoryTask repositoryTask;
     private final TaskMapper taskMapper;
 
-    @Autowired
     public TaskService(TaskMapper taskMapper, RepositoryTask repositoryTask) {
         this.taskMapper =taskMapper;
         this.repositoryTask =repositoryTask;

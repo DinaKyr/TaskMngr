@@ -2,7 +2,6 @@ package com.example.TaskMngr.services;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,6 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    @Autowired
     public UserService(RepositoryUser repositoryUser, UserMapper userMapper,
                        ProjectMapper projectMapper, RepositoryProject repositoryProject, PasswordEncoder passwordEncoder) {
         this.repositoryUser = repositoryUser;
