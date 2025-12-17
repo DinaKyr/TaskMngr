@@ -1,6 +1,9 @@
 TaskMngr – First Version
 
-This is the first version of TaskMngr, a simple task and project management application built with Spring Boot. It allows admins to manage users, projects, and tasks, and basic users to view projects and manage their own accounts.
+This is the first version of TaskMngr, a task and project management application built with Spring Boot. It allows admins to manage users, projects, and tasks, and basic users to view projects and manage their own accounts.
+
+Tools:
+SpringBoot, Maven, Thymeleaf, single Rest Api to get User statistics, PostgreSQL, VSCode.
 
 Features
 
@@ -21,6 +24,8 @@ View all projects.
 Manage their own account (update personal details, change password).
 
 Cannot modify other users or projects.
+
+Rest API to help track the User's completed Projects.
 
 Authentication:
 
