@@ -2,7 +2,6 @@ package com.example.TaskMngr.controllers;
 
 import java.security.Principal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +25,11 @@ import org.springframework.ui.Model;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    //@Autowired
-   // private RepositoryUser repositoryUser;
+    private final UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-    
 
     @GetMapping("/edit")
     public String editMyAccount(Model model, Principal principal,@RequestParam(required = false) boolean forcePasswordChange) {

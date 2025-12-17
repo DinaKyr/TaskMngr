@@ -2,7 +2,6 @@ package com.example.TaskMngr.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,8 +13,11 @@ import com.example.TaskMngr.repositories.RepositoryUser;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
+
     private RepositoryUser repositoryUser;
+    public CustomUserDetailsService(RepositoryUser repositoryUser) {
+        this.repositoryUser = repositoryUser;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.TaskMngr.dto.DtoProject;
 import com.example.TaskMngr.dto.DtoTask;
+import com.example.TaskMngr.dto.ProjectStats;
 import com.example.TaskMngr.mappers.ProjectMapper;
 //import com.example.TaskMngr.dto.DtoTask;
 //import com.example.TaskMngr.dto.DtoUser;
@@ -26,7 +26,6 @@ import com.example.TaskMngr.repositories.RepositoryTask;
 
 public class ProjectService {
 
-
     private final UserService userService;
     private final ProjectMapper projectMapper;
     private final TaskMapper taskMapper;
@@ -34,7 +33,6 @@ public class ProjectService {
     private RepositoryTask repositoryTask;
 
 
-    @Autowired
     public ProjectService(UserService userService,ProjectMapper projectMapper,RepositoryProject repositoryProject,
             TaskMapper taskMapper, RepositoryTask repositoryTask) {
         this.repositoryTask = repositoryTask;
@@ -148,5 +146,9 @@ public class ProjectService {
         task.setProject(null);
 
         repositoryProject.save(project);
+    }
+
+    public List<ProjectStats> getCompletedProjectsPerUser() {
+        return repositoryProject.countCompletedProjectsPerUser();
     }
 }

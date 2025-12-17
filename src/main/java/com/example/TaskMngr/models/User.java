@@ -24,11 +24,11 @@ import jakarta.persistence.ManyToMany;
 @Getter 
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "app_users")
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
 
     private Long id;
     private String username;
