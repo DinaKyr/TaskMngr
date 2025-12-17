@@ -1,39 +1,30 @@
-TaskMngr – First Version
+# TaskMngr – First Version
 
 This is the first version of TaskMngr, a task and project management application built with Spring Boot. It allows admins to manage users, projects, and tasks, and basic users to view projects and manage their own accounts.
 
-Tools:
-SpringBoot, Maven, Thymeleaf, single Rest Api to get User statistics, PostgreSQL, VSCode.
+## Tools:
+- SpringBoot, Maven, Thymeleaf, single Rest Api to get User statistics, PostgreSQL, VSCode.
 
-Features
+## Features
 
-Admin Capabilities:
+1. Admin Capabilities:
+-Create the first admin user via environment variables.
+-Create, update, and delete users.
+-Assign projects and tasks to users.
+-Force password change for users on next login.
 
-Create the first admin user via environment variables.
+2. User Capabilities:
+-View all projects.
+-Manage their own account (update personal details, change password).
+-Cannot modify other users or projects.
+-Rest API to help track the User's completed Projects.
 
-Create, update, and delete users.
+## Authentication:
+- Login and logout functionality.
 
-Assign projects and tasks to users.
+- Admin and basic user roles supported.
 
-Force password change for users on next login.
-
-User Capabilities:
-
-View all projects.
-
-Manage their own account (update personal details, change password).
-
-Cannot modify other users or projects.
-
-Rest API to help track the User's completed Projects.
-
-Authentication:
-
-Login and logout functionality.
-
-Admin and basic user roles supported.
-
-Getting Started
+## Getting Started
 1. Clone the repository
 git clone https://github.com/DinaKyr/TaskMngr.git
 
@@ -48,24 +39,24 @@ Before running the application, set the initial admin user credentials.
 
 Windows PowerShell:
 
-$env:ADMIN_DEFAULT_USERNAME="myAdmin"
-$env:ADMIN_DEFAULT_PASSWORD="myPassword"
-$env:ADMIN_DEFAULT_ROLE="ROLE_ADMIN"
+- $env:ADMIN_DEFAULT_USERNAME="myAdmin"
+- $env:ADMIN_DEFAULT_PASSWORD="myPassword"
+- $env:ADMIN_DEFAULT_ROLE="ADMIN"
 
 
 Windows Command Prompt (cmd.exe):
 
-set ADMIN_DEFAULT_USERNAME=myAdmin
-set ADMIN_DEFAULT_PASSWORD=myPassword
-set ADMIN_DEFAULT_ROLE=ROLE_ADMIN
-mvn spring-boot:run
+- set ADMIN_DEFAULT_USERNAME=myAdmin
+- set ADMIN_DEFAULT_PASSWORD=myPassword
+- set ADMIN_DEFAULT_ROLE=ADMIN
+- mvn spring-boot:run
 
 
 Mac/Linux (bash/zsh):
 
-export ADMIN_DEFAULT_USERNAME=myAdmin
-export ADMIN_DEFAULT_PASSWORD=myPassword
-export ADMIN_DEFAULT_ROLE=ROLE_ADMIN
+- export ADMIN_DEFAULT_USERNAME=myAdmin
+- export ADMIN_DEFAULT_PASSWORD=myPassword
+- export ADMIN_DEFAULT_ROLE=ROLE_ADMIN
 
 3. Run the application
 mvn spring-boot:run
