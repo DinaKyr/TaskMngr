@@ -58,6 +58,7 @@ Windows Command Prompt (cmd.exe):
 set ADMIN_DEFAULT_USERNAME=myAdmin
 set ADMIN_DEFAULT_PASSWORD=myPassword
 set ADMIN_DEFAULT_ROLE=ROLE_ADMIN
+mvn spring-boot:run
 
 
 Mac/Linux (bash/zsh):
