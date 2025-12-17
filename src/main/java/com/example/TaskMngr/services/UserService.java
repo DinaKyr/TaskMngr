@@ -48,7 +48,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<DtoUser> getAllUsersByRole(String role) {
+    public List<DtoUser> getAllUsersByRole(Role role) {
         List<User> users=repositoryUser.findByRole(role);
         return userMapper.toDtoList(users);
     }

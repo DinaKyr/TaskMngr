@@ -14,7 +14,7 @@ import com.example.TaskMngr.models.User;
 public interface RepositoryUser extends JpaRepository<User,Long> {
 
     //to find users by role
-    List<User> findByRole(String role);
+    List<User> findByRole(Role role);
 
     Optional<User> findByUsername(String username);
 
