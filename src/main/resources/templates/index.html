@@ -224,8 +224,8 @@
 
 
    <p sec:authorize="hasRole('ADMIN')">
-        <a class="btn btn-outline-success" th:href="@{/admin/create-user}">
-            <i class="bi bi-plus-square-fill"></i> Create user
+        <a class="btn btn-outline-success" th:href="@{/admin/invite-user}">
+            <i class="bi bi-plus-square-fill"></i> invite user
         </a>
     </p>
     <p>Logged in as: <span th:text="${#authentication.name}"></span>
