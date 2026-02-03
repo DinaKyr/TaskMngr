@@ -13,9 +13,11 @@ import com.example.TaskMngr.repositories.RepositoryInvite;
 public class InviteService {
 
     private final RepositoryInvite inviteRepository;
+    private final EmailService emailService;
 
-    public InviteService(RepositoryInvite inviteRepository) {
+    public InviteService(RepositoryInvite inviteRepository, EmailService emailService) {
         this.inviteRepository = inviteRepository;
+        this.emailService = emailService;
     }
 
     //new invite
@@ -30,6 +32,8 @@ public class InviteService {
         invite.setToken(UUID.randomUUID().toString());
         invite.setExpiresAt(LocalDateTime.now().plusDays(2)); //lasts for 2 days
         invite.setUsed(false);
+
+        emailService.sendInviteEmail(email, invite.getToken());
 
         return inviteRepository.save(invite);
     }

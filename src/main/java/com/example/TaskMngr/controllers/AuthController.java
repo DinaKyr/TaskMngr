@@ -1,5 +1,7 @@
 package com.example.TaskMngr.controllers;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,18 +11,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.example.TaskMngr.services.UserService;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.example.TaskMngr.dto.DtoUser;
 import com.example.TaskMngr.dto.OnCreate;
+import com.example.TaskMngr.models.Invite;
 import com.example.TaskMngr.models.Role;
+import com.example.TaskMngr.repositories.RepositoryInvite;
 
 
 @Controller
 public class AuthController {
 
     private final UserService userService;
+    private final RepositoryInvite inviteRepository;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, RepositoryInvite inviteRepository) {
         this.userService = userService;
+        this.inviteRepository = inviteRepository;
     }
 
     @GetMapping("/login")
@@ -29,8 +37,25 @@ public class AuthController {
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model) {
-        model.addAttribute("user",new DtoUser());
+    public String registerForm(@RequestParam(name = "token", required = false) String token, Model model) {
+        DtoUser dtoUser = new DtoUser();
+
+        if (token != null) {
+            // Lookup the invite
+            Invite invite = inviteRepository.findByToken(token)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+
+            // Check if token is valid
+            if (invite.isUsed() || invite.getExpiresAt().isBefore(LocalDateTime.now())) {
+                throw new IllegalArgumentException("Token expired or already used");
+            }
+
+            // Pre-fill email
+            dtoUser.setEmail(invite.getEmail());
+            model.addAttribute("inviteToken", token); // store token for POST
+        }
+
+        model.addAttribute("user",dtoUser);
         return "register";
     }
 

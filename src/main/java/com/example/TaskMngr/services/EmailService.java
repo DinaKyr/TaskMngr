@@ -14,12 +14,13 @@ private final JavaMailSender mailSender;
 
     public void sendInviteEmail(String toEmail, String inviteLink) {
         SimpleMailMessage message = new SimpleMailMessage();
+        String link="http://localhost:8080/register?token="+inviteLink;
         message.setTo(toEmail);
         message.setSubject("You're invited to join TaskMngr");
         message.setText(
             "You have been invited to join TaskMngr.\n\n" +
             "Click the link below to register:\n" +
-            inviteLink + "\n\n" +
+            link + "\n\n" +
             "This link will expire."
         );
 
