@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.example.TaskMngr.services.InviteService;
 import com.example.TaskMngr.services.UserService;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +26,12 @@ public class AuthController {
 
     private final UserService userService;
     private final RepositoryInvite inviteRepository;
+    private final InviteService inviteService;
 
-    public AuthController(UserService userService, RepositoryInvite inviteRepository) {
+    public AuthController(UserService userService, RepositoryInvite inviteRepository ,InviteService inviteService) {
         this.userService = userService;
         this.inviteRepository = inviteRepository;
+        this.inviteService=inviteService;
     }
 
     @GetMapping("/login")
@@ -52,7 +55,7 @@ public class AuthController {
 
             // Pre-fill email
             dtoUser.setEmail(invite.getEmail());
-            model.addAttribute("inviteToken", token); // store token for POST
+            model.addAttribute("token", token); // store token for POST
         }
 
         model.addAttribute("user",dtoUser);
@@ -60,16 +63,23 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@Validated(OnCreate.class) @ModelAttribute("user") DtoUser dtoUser,
-                        BindingResult bindingResult,
-                        Model model) {
+    public String register(@RequestParam(required = false) String token,@Validated(OnCreate.class) @ModelAttribute("user") DtoUser dtoUser,
+                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", dtoUser);
             return "register"; // show form again with errors
         }
         
         try {
-            dtoUser.setRole(Role.BASIC); //lways BASIC on register
+            Role roleToAssign = Role.BASIC;
+
+            if (token != null && !token.isBlank()) {
+                Invite invite = inviteService.validateInvite(token);
+                roleToAssign = invite.getRole();
+                inviteService.markUsed(invite);
+            }
+
+            dtoUser.setRole(roleToAssign);
             userService.createUser(dtoUser);
         } catch (Exception e) {
             bindingResult.rejectValue("username", "error.user", e.getMessage());

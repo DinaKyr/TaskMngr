@@ -12,9 +12,9 @@ private final JavaMailSender mailSender;
         this.mailSender = mailSender;
     }
 
-    public void sendInviteEmail(String toEmail, String inviteLink) {
+    public void sendInviteEmail(String toEmail, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
-        String link="http://localhost:8080/register?token="+inviteLink;
+        String link="http://localhost:8080/register?token="+token;
         message.setTo(toEmail);
         message.setSubject("You're invited to join TaskMngr");
         message.setText(
