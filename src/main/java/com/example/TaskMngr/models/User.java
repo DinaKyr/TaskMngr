@@ -8,6 +8,7 @@ import java.util.ArrayList;
 //import java.time.Instant;
 import java.util.List;
 
+import jakarta.persistence.Column;
 //import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,6 +34,7 @@ public class User implements Serializable {
     private Long id;
     private String username;
     private String password;
+    @Column(nullable = false, unique = true)
     private String email;
     // @Column(nullable = false)
     private boolean forcePasswordChange = false;

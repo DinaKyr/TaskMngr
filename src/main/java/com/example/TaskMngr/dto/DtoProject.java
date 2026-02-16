@@ -29,16 +29,25 @@ public class DtoProject {
     private LocalDate deadline;
 
     private List<DtoTask> tasks=new ArrayList<>();
+    private List<String> usernames = new ArrayList<>();
+
 
     public DtoProject() {}
 
-    public DtoProject(Long id,String name, String description, Boolean isComplete , LocalDate deadline ,List<DtoTask> tasks) {
+    public DtoProject(Long id,String name, String description, Boolean isComplete , LocalDate deadline ,List<DtoTask> tasks , List<String> usernames) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.isComplete = isComplete;
         this.deadline=deadline;
+        
         this.tasks = tasks;
+        this.usernames = usernames;
     }
+    // DtoProject
+    public String getUsernamesDisplay() {
+        return String.join(", ", usernames);
+    }
+
 }
 

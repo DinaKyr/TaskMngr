@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.TaskMngr.dto.DtoProject;
 import com.example.TaskMngr.models.Project;
+import com.example.TaskMngr.models.User;
 
 @Component
 public class ProjectMapperImp implements ProjectMapper{
@@ -28,8 +29,14 @@ public class ProjectMapperImp implements ProjectMapper{
             project.getDescription(),
             project.getIsComplete(),
             project.getDeadline(),
-            taskMapper.toDtoList(project.getTasks())
-        );
+            // project.getUsers(),
+            taskMapper.toDtoList(project.getTasks()),
+            project.getUsers().stream()
+               .map(User::getUsername)
+               .collect(Collectors.toList()) // List<String> usernames
+    );
+        
+        
 
     }
 

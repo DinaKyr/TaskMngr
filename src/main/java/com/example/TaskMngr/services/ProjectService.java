@@ -46,9 +46,7 @@ public class ProjectService {
     @Transactional
     public List<DtoProject> getAllProjects() {
         List<Project> projects=repositoryProject.findAll();
-        return projects.stream()
-                .map(projectMapper::toDto) //projectMapper from Project to DtoProject
-                .collect(Collectors.toList());
+        return projectMapper.toDtoList(projects);
     }
 
     @Transactional

@@ -18,7 +18,9 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Register</h3>
 
-                            <form th:action="@{/register}" th:object="${user}" method="post" autocomplete="off">
+                        <form th:action="@{/register}" th:object="${user}" method="post" autocomplete="off">
+                            <input type="hidden" name="token" th:value="${token}" />
+
 
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
@@ -28,7 +30,7 @@
 
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="text" th:field="*{email}" class="form-control"  />
+                                <input type="text" th:field="*{email}" class="form-control" readonly />
                                 <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                             </div>
 

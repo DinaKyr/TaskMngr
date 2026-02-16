@@ -89,105 +89,128 @@
 
 
         <tbody>
-            <th:block th:each="user : ${users}"  th:if="${user.role.name() == 'BASIC'}">
-                <tr th:if="${#lists.isEmpty(user.projects)}">
-                    <td class="hover-user">
-                        <div >
-                            <span th:text="${user.username}"></span>
-                        </div>
-                        <div th:if="${user.username != #authentication.name}" sec:authorize="hasRole('ADMIN')" class="action-buttons">
-                            <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <!--<a th:href="@{'/admin/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-outline-danger">Delete</a>-->
-                        </div>
-                    </td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td sec:authorize="hasRole('ADMIN')" th:if="${user.role.name() == 'BASIC'}">
-                            <a th:href="@{'/admin/users/' + ${user.id} + '/assign-project'}"
-                            class="btn btn-sm btn-outline-primary">
-                                Assign Project
-                            </a>
-                    </td>
-                </tr>
+            
+            <th:block th:each="user : ${users}"
+          th:if="${user.role.name() == 'BASIC' 
+                and (#authorization.expression('hasRole(''ADMIN'')') 
+                     or user.username == #authentication.name)}">
 
-                <tr th:each="project, projStat : ${user.projects}" th:if="${!#lists.isEmpty(user.projects)}">
-                    <td th:if="${projStat.index == 0}" 
-                        th:rowspan="${#lists.size(user.projects)}"
-                        class="hover-user">
-
-
-                        <div> 
-                            <span th:text="${user.username}"></span>
-                        </div>
-                        <div sec:authorize="hasRole('ADMIN')" class="action-buttons">
-                            <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <!--<a th:href="@{'/admin/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-outline-danger">Delete</a>-->
-                        </div>
-                        
-                    </td>
-
-
-<!-- PROJECT INFO -->
-                    <td>
-                        <div class="hover-project">
-                            <strong th:text="${project.name}"></strong><br />
-                            <em th:text="${project.description}"></em><br />
-                            <span th:if="${project.deadline != null}" th:text="'Deadline: ' + ${#temporals.format(project.deadline, 'yyyy-MM-dd')}"></span>
-                            <span th:unless="${project.deadline != null}">Deadline: No deadline</span><br />
-                            <span th:text="'Completed: ' + (${project.isComplete} ? 'Yes' : 'No')"></span>
-                            <span sec:authorize="hasRole('ADMIN')" class="action-buttons">
-                                <a th:href="@{'/admin/projects/' + ${project.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <!-- <th:block th:each="user : ${users}"  th:if="${user.role.name() == 'BASIC'}"> -->
+                    <tr th:if="${#lists.isEmpty(user.projects)}">
+                        <td class="hover-user">
+                            <div >
+                                <span th:text="${user.username}"></span>
+                            </div>
+                            <div th:if="${user.username != #authentication.name}" sec:authorize="hasRole('ADMIN')" class="action-buttons">
+                                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
                                 <!--<a th:href="@{'/admin/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-outline-danger">Delete</a>-->
-                                <form th:action="@{'/admin/users/' + ${user.id} + '/projects/' + ${project.id} + '/remove'}" 
-                                    method="post"
-                                    style="display:inline"
-                                    onsubmit="return confirm('Remove this project only from this user?');">
-                                    <button type="submit" class="btn btn-sm btn-outline-warning">Remove</button>
-                                </form>
-                            </span>
-                            
-
-                            
-                        </div>
-                    </td>
-
-<!-- TASKS INFO -->
-                    <td>
-                        <div class="hover-tasks">
-                            <span th:if="${#lists.isEmpty(project.tasks)}">-</span>
-                            
-                            <div th:each="task : ${project.tasks}" class="task-item">
-                                <!-- TASK INFO -->
-                                <span th:text="${task.description}"></span>
-                                <span th:text=" ${task.priority} "></span>
-                                <span th:text="${task.status} "></span>
-                                <span th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd')}"></span>
-
-                                <!-- HOVER EDIT BUTTON -->
-                                <span sec:authorize="hasRole('ADMIN')" class="edit-task-btn">
-                                    <a th:href="@{'/admin/tasks/' + ${task.id} + '/edit'}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                </span>
                             </div>
+                        </td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td sec:authorize="hasRole('ADMIN')" th:if="${user.role.name() == 'BASIC'}">
+                                <a th:href="@{'/admin/users/' + ${user.id} + '/assign-project'}"
+                                class="btn btn-sm btn-outline-primary">
+                                    Assign Project
+                                </a>
+                        </td>
+                    </tr>
 
-                            <!-- ADD TASK BUTTON -->
+                    <tr th:each="project, projStat : ${user.projects}" th:if="${!#lists.isEmpty(user.projects)}">
+                        <td th:if="${projStat.index == 0}" 
+                            th:rowspan="${#lists.size(user.projects)}"
+                            class="hover-user">
+
+
+                            <div> 
+                                <span th:text="${user.username}"></span>
+                            </div>
                             <div sec:authorize="hasRole('ADMIN')" class="action-buttons">
-                                <a th:href="@{'/admin/projects/' + ${project.id} + '/add-task'}" class="btn btn-sm btn-outline-primary">Add Task</a>
+                                <a th:href="@{'/admin/users/' + ${user.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <!--<a th:href="@{'/admin/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-outline-danger">Delete</a>-->
                             </div>
-                        </div>
-                    </td>
+                            
+                        </td>
 
 
-<!-- Assign Project button, only on first project row -->
-                    <td th:if="${projStat.index == 0 and user.role.name() == 'BASIC'}" th:rowspan="${#lists.size(user.projects)}" sec:authorize="hasRole('ADMIN')">
-                            <a th:href="@{'/admin/users/' + ${user.id} + '/assign-project'}"
-                            class="btn btn-sm btn-outline-primary">
-                                Assign Project
-                            </a>
-                    </td>
+    <!-- PROJECT INFO -->
+                        <td>
+                            <div class="hover-project">
+                                <strong th:text="${project.name}"></strong><br />
+                                <em th:text="${project.description}"></em><br />
+
+                                <span th:if="${project.deadline != null}" th:text="'Deadline: ' + ${#temporals.format(project.deadline, 'yyyy-MM-dd')}"></span>
+                                <span th:unless="${project.deadline != null}">Deadline: No deadline</span><br />
+                                <span th:text="'Completed: ' + (${project.isComplete} ? 'Yes' : 'No')"></span><br/>
+                                <small class="text-muted"
+       th:if="${#lists.size(project.usernames) > 1}">
+    Shared with:
+    <span th:each="uname : ${project.usernames}"
+          th:if="${uname != #authentication.name}"
+          th:text="${uname + ' '}">
+    </span>
+</small>
+<br/>
 
 
-                </tr>
+
+
+
+                                <span sec:authorize="hasRole('ADMIN')" class="action-buttons">
+                                    <a th:href="@{'/admin/projects/' + ${project.id} + '/edit'}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <!--<a th:href="@{'/admin/users/' + ${user.id} + '/delete'}" class="btn btn-sm btn-outline-danger">Delete</a>-->
+                                    <form th:action="@{'/admin/users/' + ${user.id} + '/projects/' + ${project.id} + '/remove'}" 
+                                        method="post"
+                                        style="display:inline"
+                                        onsubmit="return confirm('Remove this project only from this user?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-warning">Remove</button>
+                                    </form>
+                                </span>
+                                
+
+                                
+                            </div>
+                        </td>
+
+    <!-- TASKS INFO -->
+                        <td>
+                            <div class="hover-tasks">
+                                <span th:if="${#lists.isEmpty(project.tasks)}">-</span>
+                                
+                                <div th:each="task : ${project.tasks}" class="task-item">
+                                    <!-- TASK INFO -->
+                                    <span th:text="${task.description}"></span>
+                                    <span th:text=" ${task.priority} "></span>
+                                    <span th:text="${task.status} "></span>
+                                    <span th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd')}"></span>
+
+                                    <!-- HOVER EDIT BUTTON -->
+                                    <span sec:authorize="hasRole('ADMIN')" class="edit-task-btn">
+                                        <a th:href="@{'/admin/tasks/' + ${task.id} + '/edit'}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    </span>
+                                </div>
+
+                                <!-- ADD TASK BUTTON -->
+                                <div sec:authorize="hasRole('ADMIN')" class="action-buttons">
+                                    <a th:href="@{'/admin/projects/' + ${project.id} + '/add-task'}" class="btn btn-sm btn-outline-primary">Add Task</a>
+                                </div>
+                            </div>
+                        </td>
+
+
+    <!-- Assign Project button, only on first project row -->
+                        <td th:if="${projStat.index == 0 and user.role.name() == 'BASIC'}" th:rowspan="${#lists.size(user.projects)}" sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{'/admin/users/' + ${user.id} + '/assign-project'}"
+                                class="btn btn-sm btn-outline-primary">
+                                    Assign Project
+                                </a>
+                        </td>
+
+
+                    </tr>
+                </th:block>
             </th:block>
+            
         </tbody>
 
 
@@ -224,8 +247,8 @@
 
 
    <p sec:authorize="hasRole('ADMIN')">
-        <a class="btn btn-outline-success" th:href="@{/admin/create-user}">
-            <i class="bi bi-plus-square-fill"></i> Create user
+        <a class="btn btn-outline-success" th:href="@{/admin/invite-user}">
+            <i class="bi bi-plus-square-fill"></i> invite user
         </a>
     </p>
     <p>Logged in as: <span th:text="${#authentication.name}"></span>

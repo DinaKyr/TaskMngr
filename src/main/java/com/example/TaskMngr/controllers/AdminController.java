@@ -19,15 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 //import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.TaskMngr.dto.DtoInvite;
 import com.example.TaskMngr.dto.DtoProject;
 import com.example.TaskMngr.dto.DtoTask;
 import com.example.TaskMngr.dto.DtoUser;
-import com.example.TaskMngr.dto.OnCreate;
+//import com.example.TaskMngr.dto.OnCreate;
 import com.example.TaskMngr.dto.OnUpdate;
 import com.example.TaskMngr.models.Role;
 import com.example.TaskMngr.models.User;
 import com.example.TaskMngr.repositories.RepositoryUser;
 import com.example.TaskMngr.services.UserService;
+import com.example.TaskMngr.services.InviteService;
 import com.example.TaskMngr.services.ProjectService;
 import com.example.TaskMngr.services.TaskService;
 
@@ -45,41 +47,70 @@ public class AdminController {
     private final UserService userService;
     private final ProjectService projectService;
     private final TaskService taskService;
-    private final RepositoryUser repositoryUser;
+    //private final RepositoryUser repositoryUser;
+    private final InviteService inviteService;
 
-    public AdminController(UserService userService , ProjectService projectService, TaskService taskService, RepositoryUser repositoryUser) {
+    public AdminController(UserService userService , ProjectService projectService, TaskService taskService, RepositoryUser repositoryUser , InviteService inviteService) {
         this.userService = userService;
         this.projectService = projectService;
         this.taskService = taskService;
-        this.repositoryUser = repositoryUser;
+        //this.repositoryUser = repositoryUser;
+        this.inviteService = inviteService;
     }
 
-    @GetMapping("/create-user")
+//     @GetMapping("/create-user")
+//     public String showCreateUserForm(Model model) {
+//     model.addAttribute("dtouser", new DtoUser());
+//     model.addAttribute("roles", Role.values());
+
+//     return "new-user";
+// }
+
+//     @PostMapping("/user")
+//     public String createUser(@Validated(OnCreate.class) @ModelAttribute("dtouser") DtoUser dtoUser, BindingResult result, Model model){
+//         if (result.hasErrors()) {
+//             model.addAttribute("dtouser", dtoUser);
+//             model.addAttribute("roles" , Role.values()); //important!!
+
+//             return "new-user"; // Return to the form with validation errors
+//         }
+
+//         if (repositoryUser.existsByUsername(dtoUser.getUsername())) {
+//             result.rejectValue("username","error.dtouser", "Username already exists");
+//             model.addAttribute("roles",Role.values());
+//             return "new-user";
+//         }
+//         userService.createUser(dtoUser);
+//         return "redirect:/";
+//     }
+
+
+@GetMapping("/invite-user")
     public String showCreateUserForm(Model model) {
-    model.addAttribute("dtouser", new DtoUser());
+    model.addAttribute("inviteDto", new DtoInvite());
     model.addAttribute("roles", Role.values());
 
-    return "new-user";
+    return "new-invite";
 }
 
-    @PostMapping("/user")
-    public String createUser(@Validated(OnCreate.class) @ModelAttribute("dtouser") DtoUser dtoUser, BindingResult result, Model model){
+@PostMapping("/invite")
+    public String createInvite(@Valid @ModelAttribute("inviteDto") DtoInvite inviteDto,
+                            BindingResult result, Model model) {
+
         if (result.hasErrors()) {
-            model.addAttribute("dtouser", dtoUser);
-            model.addAttribute("roles" , Role.values()); //important!!
-
-            return "new-user"; // Return to the form with validation errors
+            model.addAttribute("roles", Role.values());
+            return "new-invite";
         }
 
-        if (repositoryUser.existsByUsername(dtoUser.getUsername())) {
-            result.rejectValue("username","error.dtouser", "Username already exists");
-            model.addAttribute("roles",Role.values());
-            return "new-user";
+        try {
+            inviteService.createInvite(inviteDto.getEmail(), inviteDto.getRole());
+        } catch (IllegalArgumentException e) {
+            result.rejectValue("email", "error.inviteDto", e.getMessage());
+            model.addAttribute("roles", Role.values());
+            return "new-invite";
         }
-        userService.createUser(dtoUser);
         return "redirect:/";
     }
-
     @GetMapping("/users/{userId}/assign-project")
     @PreAuthorize("hasRole('ADMIN')")
     public String showProjectAssignmentForm(@PathVariable Long userId, Model model) {
